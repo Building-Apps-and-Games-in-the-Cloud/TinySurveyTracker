@@ -1,10 +1,12 @@
 import express from 'express';
 import { surveyManager } from '../tinysurvey.mjs';
 import { checkSurveys } from '../helpers/checkstorage.mjs';
+import { checkTracking } from '../helpers/trackinghelper.mjs';
+
 const router = express.Router();
 
 // Got the options for a new survey
-router.post('/:topic', checkSurveys, async (request, response) => {
+router.post('/:topic', checkTracking, checkSurveys, async (request, response) => {
     let topic = request.params.topic;
     let options = [];
     let optionNo = 1;
@@ -25,8 +27,11 @@ router.post('/:topic', checkSurveys, async (request, response) => {
       optionNo++;
     } while (true);
   
+    request.cookies.creatorGUID
     // Build a survey value
-    let newSurvey = { topic: topic, options: options };
+    let newSurvey = { topic: topic, 
+      options: options, 
+      creatorGUID:request.cookies.creatorGUID };
   
     // save it
     await surveyManager.storeSurvey(newSurvey);

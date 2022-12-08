@@ -21,6 +21,10 @@ var surveySchema = mongoose.Schema({
     options: {
         type: [optionSchema],
         required: true
+    },
+    creatorGUID: {
+        type: String,
+        required:false
     }
 });
 

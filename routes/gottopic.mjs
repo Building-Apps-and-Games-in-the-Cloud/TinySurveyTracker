@@ -1,40 +1,50 @@
 import express from 'express';
 import { surveyManager } from '../tinysurvey.mjs';
 import { checkSurveys } from '../helpers/checkstorage.mjs';
+import { checkTracking } from '../helpers/trackinghelper.mjs';
+
 const router = express.Router();
 
-router.post('/', checkSurveys, async (request, response) => {
+router.post('/', checkTracking, checkSurveys, async (request, response) => {
 
   let topic = request.body.topic;
 
   let surveyOptions = await surveyManager.getOptions(topic);
 
   if (surveyOptions) {
-    // Need to check if the survey has already been filled in
-    // by this user
-    if (request.cookies.completedSurveys) {
-      // Got a completed surveys cookie
-      // Parse it into a list of completed surveys
-      let completedSurveys = JSON.parse(request.cookies.completedSurveys);
-      // Look for the current topic in the list
-      if (completedSurveys.includes(topic)) {
-        // This survey has already been filled in using this browser
-        // Just display the results
-        let results = await surveyManager.getCounts(topic);
-        response.render('displayresults.ejs', results);
+    // Need to check if this person created the survey
+    if (surveyOptions.creatorGUID == request.cookies.creatorGUID) {
+      // Render the results and add a delete button
+      let results = await surveyManager.getCounts(topic);
+      response.render('displayresultsdelete.ejs', results);
+    }
+    else {
+      // Need to check if the survey has already been filled in
+      // by this user
+      if (request.cookies.completedSurveys) {
+        // Got a completed surveys cookie
+        // Parse it into a list of completed surveys
+        let completedSurveys = JSON.parse(request.cookies.completedSurveys);
+        // Look for the current topic in the list
+        if (completedSurveys.includes(topic)) {
+          // This survey has already been filled in using this browser
+          // Just display the results
+          let results = await surveyManager.getCounts(topic);
+          response.render('displayresults.ejs', results);
+        }
+        else {
+          // Survey not in the cookie
+          // enter scores on an existing survey
+          let surveyOptions = await surveyManager.getOptions(topic);
+          response.render('selectoption.ejs', surveyOptions);
+        }
       }
       else {
-        // Survey not in the cookie
+        // There is no completed surveys cookie
         // enter scores on an existing survey
         let surveyOptions = await surveyManager.getOptions(topic);
         response.render('selectoption.ejs', surveyOptions);
       }
-    }
-    else {
-      // There is no completed surveys cookie
-      // enter scores on an existing survey
-      let surveyOptions = await surveyManager.getOptions(topic);
-      response.render('selectoption.ejs', surveyOptions);
     }
   }
   else {

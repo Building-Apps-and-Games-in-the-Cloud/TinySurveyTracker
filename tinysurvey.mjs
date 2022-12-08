@@ -7,6 +7,8 @@ import {gottopic} from './routes/gottopic.mjs';
 import {setoptions} from './routes/setoptions.mjs';
 import {recordselection} from './routes/recordselection.mjs';
 import {displayresults} from './routes/displayresults.mjs';
+import {deletesurvey} from './routes/deletesurvey.mjs';
+import {trackingok} from './routes/trackingok.mjs';
 
 // Create the express application
 const app = express();
@@ -27,6 +29,8 @@ app.use('/gottopic', gottopic);
 app.use('/setoptions', setoptions);
 app.use('/recordselection', recordselection);
 app.use('/displayresults', displayresults);
+app.use('/deletesurvey', deletesurvey);
+app.use('/trackingok', trackingok);
 
 // Create a survey manager
 let surveyManager = new SurveyManager();

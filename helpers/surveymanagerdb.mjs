@@ -20,7 +20,7 @@ class SurveyManagerDB {
 
     /**
      * Stores a survey
-     * @param {Object} newValue topic string and option list  
+     * @param {Object} newValue topic string, creatorGUID and option list  
      */
     async storeSurvey(newValue) {
         let survey = await Surveys.findOne({ topic: newValue.topic });
@@ -31,6 +31,14 @@ class SurveyManagerDB {
             let newSurvey = new Surveys(newValue);
             await newSurvey.save();
         }
+    }
+
+    /**
+     * Delete the survey with the given topic
+     * @param {string} topic topic of the survey 
+     */
+    async deleteSurvey(topic){
+        await Surveys.deleteOne(({ topic: topic }));
     }
 
     /**
@@ -56,7 +64,7 @@ class SurveyManagerDB {
     /**
      * 
      * @param {string} topic of the survey
-     * @returns topic and a list of option names and counts
+     * @returns topic, creatorGUID and a list of option names and counts
      */
     async getCounts(topic) {
         let result;
@@ -67,7 +75,9 @@ class SurveyManagerDB {
                 let countInfo = { text: option.text, count: option.count };
                 options.push(countInfo);
             });
-            result = { topic: survey.topic, options: options };
+            result = { topic: survey.topic, 
+                options: options,
+                creatorGUID: survey.creatorGUID };
         }
         else {
             result = null;
@@ -77,8 +87,8 @@ class SurveyManagerDB {
 
     /**
      * 
-     * @param {topic of the survey} topic 
-     * @returns topic and a list of option names
+     * @param {string} topic topic of the survey 
+     * @returns topic, creatorGUID and a list of option names 
      */
     async getOptions(topic) {
         let result;
@@ -89,7 +99,9 @@ class SurveyManagerDB {
                 let optionInfo = { text: option.text };
                 options.push(optionInfo);
             });
-            let result = { topic: survey.topic, options: options };
+            let result = { topic: survey.topic, 
+                options: options,
+                creatorGUID: survey.creatorGUID };
             return result;
         }
         else {
