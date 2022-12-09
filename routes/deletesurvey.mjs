@@ -12,27 +12,52 @@ router.get('/:topic', checkTracking, checkSurveys, async (request, response) => 
   let surveyOptions = await surveyManager.getOptions(topic);
 
   if (surveyOptions) {
+    // Found the survey
     // Need to check if this person created the survey
     if (surveyOptions.creatorGUID == request.cookies.creatorGUID) {
-      // Render the results and add a delete button
+      // This is the owner of the survey - can delete it
       await surveyManager.deleteSurvey(topic);
-      let deleteMessage = {
+
+      let deleteCompleteMenu = {
         heading: "Delete",
-        message: `The survey ${topic} has been deleted. Press OK to continue`,
-        url: "/",
-        buttonText: "OK"
+        message: "The survey has been deleted",
+        menu: [
+          {
+            description: "Continue",
+            route: "/"
+          }
+        ]
       };
-      response.render('displaymessage.ejs', deleteMessage);
-    };
+      response.render('menupage.ejs', deleteCompleteMenu);
+    }
+    else{
+      // Not the owner - display a message
+      let wrongUserMenu = {
+        heading: "Delete",
+        message: "You are not the creator of this survey",
+        menu: [
+          {
+            description: "Continue",
+            route: "/"
+          }
+        ]
+      };
+      response.render('menupage.ejs', wrongUserMenu);
+      }
   }
   else {
-    let deleteMessage = {
+    // Survey not found
+    let deleteCompleteMenu = {
       heading: "Delete",
-      message: `The survey was not found. Press OK to continue`,
-      url: "/",
-      buttonText: "OK"
+      message: "The survey was not found",
+      menu: [
+        {
+          description: "Continue",
+          route: "/"
+        }
+      ]
     };
-    response.render('displaymessage.ejs', deleteMessage);
+    response.render('menupage.ejs', deleteCompleteMenu);
   }
 });
 

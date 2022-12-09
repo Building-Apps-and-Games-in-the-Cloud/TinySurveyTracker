@@ -16,7 +16,7 @@ router.post('/', checkTracking, checkSurveys, async (request, response) => {
     if (surveyOptions.creatorGUID == request.cookies.creatorGUID) {
       // Render the results and add a delete button
       let results = await surveyManager.getCounts(topic);
-      response.render('displayresultsdelete.ejs', results);
+      response.render('displayresultsmanage.ejs', results);
     }
     else {
       // Need to check if the survey has already been filled in
