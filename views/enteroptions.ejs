@@ -17,17 +17,15 @@
     <form action="/setoptions/<%=topic%>" method="POST">
       <% for(let i=1;i<=numberOfOptions;i++) { %>
         <p>
-          <input type="text" required class="form-control" 
-          spellcheck="false" value="" name="option<%=i %>">
+          <input type="text" required class="form-control" spellcheck="false" value="" name="option<%=i %>">
         </p>
         <% } %>
-          <p>
-            <button type="submit" class="btn btn-primary mt-1">Start</button>
-          </p>
-    </form>
-    <p>
-      Enter your options and press Start to go live.
-    </p>
+          <div class="col-sm-12">
+            <button class="btn btn-primary mt-1 btn-block" type="submit" ">
+              Start survey
+            </button>
+          </div>
+      </form>
   </div>
 </body>
 

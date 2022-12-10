@@ -5,6 +5,20 @@ import { checkTracking } from '../helpers/trackinghelper.mjs';
 
 const router = express.Router();
 
+function messageDisplay(message,response){
+  let messageDescription = {
+    heading: "Delete",
+    message: message,
+    menu: [
+      {
+        description: "Continue",
+        route: "/"
+      }
+    ]
+  };
+  response.render('menupage.ejs', messageDescription);
+}
+
 router.get('/:topic', checkTracking, checkSurveys, async (request, response) => {
 
   let topic = request.params.topic;
@@ -17,48 +31,17 @@ router.get('/:topic', checkTracking, checkSurveys, async (request, response) => 
     if (surveyOptions.creatorGUID == request.cookies.creatorGUID) {
       // This is the owner of the survey - can delete it
       await surveyManager.deleteSurvey(topic);
-
-      let deleteCompleteMenu = {
-        heading: "Delete",
-        message: "The survey has been deleted",
-        menu: [
-          {
-            description: "Continue",
-            route: "/"
-          }
-        ]
-      };
-      response.render('menupage.ejs', deleteCompleteMenu);
+      messageDisplay("The survey has been deleted",response);
     }
     else{
       // Not the owner - display a message
-      let wrongUserMenu = {
-        heading: "Delete",
-        message: "You are not the creator of this survey",
-        menu: [
-          {
-            description: "Continue",
-            route: "/"
-          }
-        ]
-      };
-      response.render('menupage.ejs', wrongUserMenu);
+      messageDisplay("You are not the creator of this survey",response);
       }
   }
   else {
     // Survey not found
-    let deleteCompleteMenu = {
-      heading: "Delete",
-      message: "The survey was not found",
-      menu: [
-        {
-          description: "Continue",
-          route: "/"
-        }
-      ]
-    };
-    response.render('menupage.ejs', deleteCompleteMenu);
-  }
+    messageDisplay("The survey was not found",response);
+   }
 });
 
 export { router as deletesurvey };

@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 
 function storeCreatorGUIDCookie(guid, response) {
-    let cookieLifeInDays = 10;
+    let cookieLifeInDays = 1000;
     let dayLengthInMillis = (24 * 60 * 60 * 1000);
     response.cookie("creatorGUID",
         guid,

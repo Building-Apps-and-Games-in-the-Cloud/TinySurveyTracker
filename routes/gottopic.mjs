@@ -12,9 +12,10 @@ router.post('/', checkTracking, checkSurveys, async (request, response) => {
   let surveyOptions = await surveyManager.getOptions(topic);
 
   if (surveyOptions) {
-    // Need to check if this person created the survey
+    // There is a survey with this topic
+    // Need to check if this user created the survey
     if (surveyOptions.creatorGUID == request.cookies.creatorGUID) {
-      // Render the results and add a delete button
+      // Render survey management page
       let results = await surveyManager.getCounts(topic);
       response.render('displayresultsmanage.ejs', results);
     }

@@ -24,7 +24,7 @@ var surveySchema = mongoose.Schema({
     },
     creatorGUID: {
         type: String,
-        required:false
+        required:true 
     }
 });
 
