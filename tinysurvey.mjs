@@ -9,6 +9,7 @@ import {recordselection} from './routes/recordselection.mjs';
 import {displayresults} from './routes/displayresults.mjs';
 import {deletesurvey} from './routes/deletesurvey.mjs';
 import {trackingok} from './routes/trackingok.mjs';
+import {displayresultsmanage} from './routes/displayresultsmanage.mjs';
 
 // Create the express application
 const app = express();
@@ -31,6 +32,7 @@ app.use('/recordselection', recordselection);
 app.use('/displayresults', displayresults);
 app.use('/deletesurvey', deletesurvey);
 app.use('/trackingok', trackingok);
+app.use('/displayresultsmanage', displayresultsmanage);
 
 // Create a survey manager
 let surveyManager = new SurveyManager();
