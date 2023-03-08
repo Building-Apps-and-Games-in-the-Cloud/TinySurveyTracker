@@ -20,7 +20,7 @@ function checkTracking(request, response, next) {
         // Not got a cookie - are we OK to track this user?
         let trackConfirm = {
             heading: "Tracking",
-            message: "This application uses cookies.",
+            message: "This application uses a cookie which stores the topics of surveys you have voted in. The stored information is used to prevent multiple votes in the survey and for no other purpose.",
             menu: [
                 {
                     description: "Continue with cookies",
